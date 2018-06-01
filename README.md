@@ -21,10 +21,13 @@ Make sure you have your AWS credentials set up correctly so they can be used by 
 - https://martinfowler.com/articles/serverless.html#benefits
 - https://blog.symphonia.io/learning-lambda-1f25af64161c
 - https://docs.aws.amazon.com/lambda/latest/dg/welcome.html
+- https://www.mongodb.com/blog/post/optimizing-aws-lambda-performance-with-mongodb-atlas-and-nodejs
 
 ## What is serverless?
 
 Serverless can be used to describe both BaaS systems such as Firebase or Parse, or FaaS systems such as AWS Lambda or Azure Functions. Functions run in stateless containers that are event-triggered, ephemeral (may only last for one invocation), and are (often) fully managed by a third party. FaaS is the aspect of serverless that has gained the most hype over the last couple of years. AWS Lambda is the leading FaaS provider.
+
+![](https://media.giphy.com/media/ZIyPz7yO97cIg/giphy.gif)
 
 There is a popular framework called _serverless_ that makes developing and deploying cloud functions easier. This is separate from _serverless the concept_.
 
@@ -47,6 +50,12 @@ Let's read a bit more about how FaaS works here: https://martinfowler.com/articl
 ## What are the benefits and drawbacks of FaaS?
 
 https://martinfowler.com/articles/serverless.html#benefits
+
+> Note: Downstream databases and non-FaaS components will have to be reconsidered in light of a possibly significant increase in their load.
+
+Benefit not mentioned: Cloud provider free tiers
+
+Drawback not directly mentioned: Connection pooling is inferior to long-living compute instances.
 
 ## Quick dive into Lambda using the AWS CLI
 
@@ -115,7 +124,7 @@ To deploy this function, run:
 serverless deploy
 ```
 
-You can invoke the function on Lambda by running:
+This created the CloudFormation configuration necessary and deploys it to AWS. You can invoke the function on Lambda by running:
 
 ```
 serverless invoke -f hello
@@ -340,4 +349,6 @@ curl https://wv4voskhr7.execute-api.us-east-1.amazonaws.com/dev/hello
 #### Limitations
 
 Every new container will create a new connection pool. So concurrent requests will not be able to make use of connection pooling. Also, if functions are invoked infrequently, they will experience cold starts and will have to create a new connection on each invocation.
+
+This is worse than having a dedicated instance, which is able to maintain long living connections, and concurrent requests can draw from the same connection pool.
 
