@@ -1,11 +1,14 @@
-service: uuid-4
+service: mongo-6
 
 provider:
   name: aws
   runtime: nodejs8.10
+  timeout: 10
 
 functions:
   hello:
     handler: handler.hello
     events:
       - http: GET hello
+    environment:
+      MONGODB_URI: ${env:SLS_MONGO_URI}

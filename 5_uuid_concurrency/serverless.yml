@@ -1,8 +1,9 @@
-service: uuid-4
+service: uuid-5
 
 provider:
   name: aws
   runtime: nodejs8.10
+  timeout: 10
 
 functions:
   hello:
